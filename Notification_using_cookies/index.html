@@ -1,0 +1,44 @@
+<h1>エクスポート</h1>
+
+<div id="message"></div>
+
+<form action="sample.php" method="POST" id="form">
+    <input type="submit" name="submit" id="button" value="実行">
+</form>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script>
+    $('#form').submit(function (e) {
+        // 実行ボタンをロックし、ラベルを "処理中" へ
+        $('#button').prop('disabled', true).val('処理中');
+
+        var intervalId;
+        var timeout_count = 0;
+
+        // 1 秒間隔で exported cookie をチェック
+        intervalId = setInterval(function () {
+            // タイムアウト処理
+            timeout_count = timeout_count + 1;
+            if (timeout_count > 5) {
+                $('#button').prop('disabled', false).val('実行');
+                $('#message').text('タイムアウトしました、処理を中断します。');
+                // ポーリングを停止
+                clearInterval(intervalId);
+            }
+
+            // 発行されたクッキーを確認
+            if ($.cookie('exported')) {
+                // 実行ボタンをアンロック後ラベルを元に戻す
+                $('#button').prop('disabled', false).val('実行');
+
+                $('#message').text('正常に終了しました。');
+                // ポーリングを停止
+                clearInterval(intervalId);
+                // クッキーのフラグをクリア
+                $.removeCookie('exported', { path: '/' });
+            }
+        }, 1000);
+    });
+</script>
