@@ -1,9 +1,9 @@
 <?php
 // ストリーム出力するためのヘッダー設定
-header("Content-type: application/octet-stream");
-header("Transfer-encoding: chunked");
-ob_flush();
-flush();
+header('Content-type: application/octet-stream; charset=UTF-8');
+header('Transfer-encoding: chunked');
+@ob_flush();
+@flush();
 
 // 最大実行時間の設定（仮で１時間）
 set_time_limit(60 * 60);
@@ -26,10 +26,10 @@ while (!connection_aborted()) {
     // データをブラウザ側に掃き出し
     output_chunk($json . PHP_EOL);
 
-    ob_flush();
-    flush();
+    @ob_flush();
+    @flush();
 
-    // 1秒だけ待つ（この部分はなくてもOK）
+    // サンプル用のディレイ
     sleep(1);
 }
 
@@ -39,6 +39,6 @@ output_chunk('');
 // チャンク化されたデータを掃き出す
 function output_chunk($chunk)
 {
-    echo sprintf("%x\r\n", strlen($chunk));
+    // echo sprintf("%x\r\n", strlen($chunk));
     echo $chunk . "\r\n";
 }

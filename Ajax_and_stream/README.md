@@ -16,4 +16,7 @@ zlib.output_compression = Off
 NginxをLBとして使っている場合は以下のオプション
 ```conf
 proxy_buffering off;
+fastcgi_buffering off;
 ```
+
+まじリアルタイムになる。
